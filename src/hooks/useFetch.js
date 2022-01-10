@@ -10,6 +10,7 @@ const useFetch = (url, dependencyArr) => {
             .then((responseJson) => {
                 setIsLoading(1);
                 setFetchedData(responseJson);
+                if (!responseJson.success) throw new Error("Bad Response");
                 console.log("done");
             })
             .catch((err) => {

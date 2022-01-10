@@ -10,7 +10,7 @@ const LoadingWheel = (props) => {
             setTimeout(() => {
                 setLoadingFalse();
                 props.showGame();
-            }, 2500);
+            }, 1);
         }
     }, [props.isLoading, setLoadingFalse]);
 

@@ -9,10 +9,14 @@ body {
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #05396b;
 }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+.align {
+    @apply mt-10 mx-10;
 }
 
 .sp-font-1 {
@@ -50,3 +54,7 @@ code {
         transform: rotate(360deg);
     }
 }
+.game-card {
+    @apply bg-swhite text-sblue rounded-md px-8 py-8 border-2 border-sgreen;
+}
+
