@@ -3,21 +3,23 @@ const useFetch = (url, dependencyArr) => {
     const [isLoading, setIsLoading] = useState(0);
     const [fetchedData, setFetchedData] = useState(null);
 
+    const dependencies = [...dependencyArr, url] 
+
     useEffect(() => {
-        console.log("sent req");
+        //console.log("sent req");
         fetch(url)
             .then((response) => response.json())
             .then((responseJson) => {
                 setIsLoading(1);
                 setFetchedData(responseJson);
                 if (!responseJson.success) throw new Error("Bad Response");
-                console.log("done");
+                //console.log("done");
             })
             .catch((err) => {
                 setIsLoading(-1);
                 console.log(err);
             });
-    }, [...dependencyArr, url]);
+    }, dependencies);
 
     return [isLoading, fetchedData];
 };
