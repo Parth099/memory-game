@@ -4,9 +4,9 @@ import uniqid from "uniqid";
 
 const MemGame = (props) => {
     const [memes, setMemes] = useState([]);
-    const [hash, setHash] = useState(new Map()); //the knows what been clicked or not
+    const [hash, setHash] = useState(new Map()); //the map knows what been clicked or not
     const [gameLevel, setGameLevel] = useState(1);
-    const [length, setLength] = useState(5);
+    const [numClicks, setNumClicks] = useState(0); //track the number of clicks
 
     const genNUniqueRanNums = (n, limit) => {
         if (n > limit) return;
@@ -31,25 +31,47 @@ const MemGame = (props) => {
     }, [gameLevel]);
 
     useEffect(() => {
-        if (length === 0) {
-            console.log("W");
-            //need to start new GAME
+        if (numClicks == hash.size && numClicks != 0) {
+            setGameLevel((prev) => {
+                setHash(new Map());
+                setNumClicks(0);
+                return prev + 1;
+            });
         }
-    }, [length]);
+
+        console.log(numClicks);
+    }, [numClicks]);
+
+    const reactSafeShuffle = (array) => {
+        /*
+            HOW IT WORKS:
+            each element gets a random number attached to it
+            the sort comparisonFN compares 2 elements by subtracting their random attr
+            the last map removes the random value
+        */
+        return [...array]
+            .map((value) => ({ value, rand: Math.random() }))
+            .sort((objA, objB) => objA.rand - objB.rand)
+            .map((element) => element.value);
+    };
 
     const onClick = (uuid) => {
-        const isClicked = hash.get(uuid) === 0;
+        const isClicked = hash.get(uuid) === 0; //if the val in key:val is 0 they tile has been ckicked already
         if (!isClicked) {
             setHash((prev) => new Map(prev).set(uuid, 0));
-            setLength(length - 1);
+            setNumClicks(numClicks + 1);
+            setMemes(reactSafeShuffle(memes));
         } else {
             //Loss :
             setHash((prev) => {
                 //de-activiates the onClick event since none will be eq to 1 now
                 const mapArray = [...prev];
                 const sum = mapArray.reduce((prev, current) => prev + current[1], 0);
-                if (sum === 0) return prev; //no need to change we already did
+                if (sum === 0) {
+                    return prev;
+                } //no need to change we already did
                 mapArray.forEach((arr) => (arr[1] = 0));
+                //loss
                 return new Map([...mapArray]);
             });
         }
